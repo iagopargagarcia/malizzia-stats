@@ -3,362 +3,421 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Socialgeek.News — Stats</title>
-  <link rel="icon" type="image/png" href="logo_social-geek-logo.png" />
-  <link rel="apple-touch-icon" href="logo_social-geek-logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <title>Malizzia Stats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --accent: #e8ff47; --bg: #f7f7f5; --surface: #fff; --border: rgba(0,0,0,0.08); --text: #111; --muted: #888; --radius: 12px; }
+    :root {
+      --accent: #e8ff47;
+      --bg: #f7f7f5;
+      --surface: #fff;
+      --border: rgba(0,0,0,0.08);
+      --text: #111;
+      --muted: #888;
+      --ig: #E1306C;
+      --fb: #1877F2;
+      --radius: 14px;
+    }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* LOGIN */
-    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #111; }
-    .login-box { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5rem 2rem; width: 340px; }
-    .login-logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .login-logo span { color: var(--accent); }
-    .login-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 2rem; letter-spacing: 0.04em; }
-    .login-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; }
-    .login-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 14px; font-family: 'DM Sans', sans-serif; margin-bottom: 1rem; outline: none; }
-    .login-input:focus { border-color: var(--accent); }
-    .login-btn { width: 100%; background: var(--accent); border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 700; font-family: 'Bricolage Grotesque', sans-serif; color: #111; cursor: pointer; transition: opacity 0.15s; }
-    .login-btn:hover { opacity: 0.85; }
-    .login-error { font-size: 12px; color: #ff6b6b; margin-top: 8px; display: none; }
-
-    /* DASHBOARD */
-    #dashboard { display: none; }
-    .header { background: #111; padding: 1.5rem; display: flex; align-items: flex-end; justify-content: space-between; }
-    .logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+    /* HEADER */
+    .header {
+      background: #111;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
     .logo span { color: var(--accent); }
-    .logo-sub { font-size: 11px; color: var(--accent); margin-top: 2px; letter-spacing: 0.04em; }
-    .header-tag { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; }
-    .content { padding: 1.5rem; max-width: 960px; margin: 0 auto; }
-    .section-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; font-weight: 500; margin-top: 1.5rem; }
-    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
-    .metric-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
-    .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-    .metric-value { font-size: 30px; font-weight: 700; color: var(--text); line-height: 1; font-family: 'Bricolage Grotesque', sans-serif; }
-    .metric-sub { font-size: 11px; color: #bbb; margin-top: 4px; }
+    .logo-sub { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .filter-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; padding: 3px; }
+    .filter-tab { font-size: 11px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; color: rgba(255,255,255,0.4); padding: 5px 12px; border-radius: 99px; cursor: pointer; transition: all 0.15s; border: none; background: transparent; }
+    .filter-tab.active { background: var(--accent); color: #111; }
+
+    /* CONTENT */
+    .content { padding: 1.5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; font-weight: 500; margin-top: 1.75rem; }
+
+    /* KPI GRID */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .kpi-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card.accent { background: var(--accent); }
+    .kpi-card.dark { background: #111; }
+    .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .kpi-card.dark .kpi-label { color: rgba(255,255,255,0.4); }
+    .kpi-card.accent .kpi-label { color: rgba(0,0,0,0.5); }
+    .kpi-value { font-size: 36px; font-weight: 800; color: var(--text); line-height: 1; font-family: 'Bricolage Grotesque', sans-serif; }
+    .kpi-card.dark .kpi-value { color: #fff; }
+    .kpi-card.accent .kpi-value { color: #111; }
+    .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .kpi-card.dark .kpi-sub { color: rgba(255,255,255,0.3); }
+    .kpi-card.accent .kpi-sub { color: rgba(0,0,0,0.4); }
+
+    /* PLATFORM SPLIT */
+    .platform-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .platform-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .platform-header { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+    .platform-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .platform-dot.ig { background: var(--ig); }
+    .platform-dot.fb { background: var(--fb); }
+    .platform-name-label { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; }
+    .platform-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .platform-stat { background: var(--bg); border-radius: 8px; padding: 10px 12px; }
+    .platform-stat-value { font-size: 22px; font-weight: 800; font-family: 'Bricolage Grotesque', sans-serif; }
+    .platform-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+    /* POST CARDS */
+    .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .post-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .post-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .post-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #efefed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .post-img img { width: 100%; height: 100%; object-fit: cover; }
+    .post-platform-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .post-platform-badge.ig { background: var(--ig); }
+    .post-platform-badge.fb { background: var(--fb); }
+    .post-body { padding: 12px; }
+    .post-date { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+    .post-message { font-size: 12px; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; }
+    .post-stats { display: flex; gap: 10px; }
+    .post-stat { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+    .post-stat strong { color: var(--text); font-weight: 700; }
+    .post-reach-bar { height: 2px; background: #f0f0ee; border-radius: 99px; margin-top: 10px; }
+    .post-reach-fill { height: 100%; border-radius: 99px; background: #111; transition: width 0.6s ease; }
+
+    /* TOP POST */
+    .top-post-card {
+      background: #111;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .top-post-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      background: #222;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      overflow: hidden;
+    }
+    .top-post-img img { width: 100%; height: 100%; object-fit: cover; }
+    .top-post-badge { background: var(--accent); color: #111; font-size: 9px; font-weight: 700; font-family: 'Bricolage Grotesque', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 99px; padding: 3px 8px; display: inline-block; margin-bottom: 8px; }
+    .top-post-message { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; }
+    .top-post-stats { display: flex; gap: 20px; }
+    .top-post-stat-value { font-size: 24px; font-weight: 800; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; }
+    .top-post-stat-label { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* CHART */
     .chart-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .city-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .city-name { font-size: 13px; color: var(--text); min-width: 100px; }
-    .city-bar-wrap { flex: 1; background: #f1f1ef; border-radius: 99px; height: 6px; }
-    .city-bar { background: #111; border-radius: 99px; height: 6px; transition: width 0.6s ease; }
-    .city-pct { font-size: 12px; color: var(--muted); min-width: 36px; text-align: right; }
-    .platform-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-    .platform-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1rem 1rem; display: flex; flex-direction: column; gap: 10px; }
-    .platform-icon { width: 38px; height: 38px; border-radius: 8px; background: #efefed; display: flex; align-items: center; justify-content: center; }
-    .platform-icon img { width: 20px; height: 20px; }
-    .platform-icon svg { width: 20px; height: 20px; }
-    .platform-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
-    .platform-clics { font-size: 26px; font-weight: 700; color: var(--text); font-family: 'Bricolage Grotesque', sans-serif; line-height: 1; }
-    .platform-label { font-size: 11px; color: var(--muted); }
-    .updated { font-size: 11px; color: #ccc; text-align: center; padding: 1.5rem 0 0.5rem; }
-    .refresh-wrap { text-align: center; margin-top: 1.5rem; }
-    .refresh-btn { background: #111; color: #fff; border: none; border-radius: 99px; padding: 10px 24px; font-size: 13px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.15s; }
-    .refresh-btn:hover { opacity: 0.75; }
-    .refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .refresh-btn .spin { display: inline-block; animation: spin 1s linear infinite; }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .footer { background: var(--accent); padding: 1.5rem; text-align: center; margin-top: 2rem; }
-    .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 800; color: #111; }
-    @media (max-width: 600px) {
-      .metric-grid { grid-template-columns: repeat(2, 1fr); }
-      .two-col { grid-template-columns: 1fr; }
-      .platform-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 1rem; }
+
+    /* LOADING */
+    .loading { text-align: center; padding: 4rem; color: var(--muted); font-size: 13px; }
+    .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #ddd; border-top-color: #111; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* FOOTER */
+    .footer { background: var(--accent); padding: 1rem 2rem; text-align: center; margin-top: 3rem; }
+    .footer-text { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; color: #111; }
+
+    @media (max-width: 768px) {
+      .content { padding: 1rem; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .platform-split { grid-template-columns: 1fr; }
+      .posts-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-post-card { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .posts-grid { grid-template-columns: 1fr; }
+      .header { flex-direction: column; gap: 1rem; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
 
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Socialgeek<span>.</span>News</div>
-    <div class="login-sub">PANEL DE ESTADÍSTICAS</div>
-    <label class="login-label">Contraseña</label>
-    <input class="login-input" type="password" id="pwd-input" placeholder="••••••••" />
-    <button class="login-btn" id="login-btn" onclick="checkLogin()">Entrar</button>
-    <div class="login-error" id="login-error">Contraseña incorrecta</div>
+<div class="header">
+  <div>
+    <div class="logo">Malizzia <span>Stats</span></div>
+    <div class="logo-sub">Social Media Dashboard</div>
+  </div>
+  <div class="header-right">
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setFilter('all', this)">Todo</button>
+      <button class="filter-tab" onclick="setFilter('instagram', this)">Instagram</button>
+      <button class="filter-tab" onclick="setFilter('facebook', this)">Facebook</button>
+    </div>
   </div>
 </div>
 
-<div id="dashboard">
-  <div class="header">
-    <div>
-      <div class="logo">Socialgeek<span>.</span>News</div>
-      <div class="logo-sub">by Iago Parga</div>
-    </div>
-    <div class="header-tag">Stats · últimos 7 días</div>
-  </div>
-
-  <div class="content">
-    <div class="section-label">resumen general</div>
-    <div class="metric-grid">
-      <div class="metric-card">
-        <div class="metric-label">Usuarios totales</div>
-        <div class="metric-value" id="stat-users">—</div>
-        <div class="metric-sub">últimos 7 días</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Vistas de página</div>
-        <div class="metric-value" id="stat-pageviews">—</div>
-        <div class="metric-sub">últimos 7 días</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Clics en redes</div>
-        <div class="metric-value" id="stat-clicks">—</div>
-        <div class="metric-sub">plataforma_vista</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Suscripciones</div>
-        <div class="metric-value" id="stat-subs">—</div>
-        <div class="metric-sub">botón suscríbete</div>
-      </div>
-    </div>
-
-    <div class="section-label">visitas por hora</div>
-    <div class="chart-card">
-      <div style="position:relative;width:100%;height:200px;">
-        <canvas id="hourChart"></canvas>
-      </div>
-    </div>
-
-    <div class="section-label">ciudades</div>
-    <div class="two-col">
-      <div class="chart-card">
-        <div id="city-list"></div>
-      </div>
-      <div class="chart-card">
-        <div style="position:relative;width:100%;height:220px;">
-          <canvas id="cityChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-label">tráfico por día</div>
-    <div class="chart-card">
-      <div style="position:relative;width:100%;height:200px;">
-        <canvas id="diasChart"></canvas>
-      </div>
-    </div>
-
-    <div class="section-label">fuentes de adquisición</div>
-    <div class="chart-card" id="fuentes-list"></div>
-
-    <div class="section-label">clics por red social</div>
-    <div class="platform-grid" id="platform-grid"></div>
-
-    <div class="updated" id="updated-at"></div>
-    <div class="refresh-wrap">
-      <button class="refresh-btn" id="refresh-btn" onclick="actualizarDatos()">
-        <span id="refresh-icon">🔄</span> Actualizar datos
-      </button>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-logo">Socialgeek.News — Stats</div>
-  </div>
+<div class="content" id="main-content">
+  <div class="loading"><span class="spinner"></span> Cargando datos...</div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<div class="footer">
+  <div class="footer-text">Malizzia Street Food · Stats</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-  const PASSWORD_HASH = '77098ff590da8c6dbb9157d479b048211696e3c13f6771cf540f110a7ba64d5b';
-  const WEBHOOK_URL = 'https://anotherparga.app.n8n.cloud/webhook/b4aebef7-5170-4daa-89da-8236bdab0a0e';
+  // ============================
+  // DATOS DE EJEMPLO (reemplazar por fetch al Sheet o webhook)
+  // ============================
+  const SAMPLE_DATA = [
+    { post_id: "18101985377509020", platform: "instagram", date: "2026-03-30T16:46:15+0000", message: "🔥 ¡SORTEO A LA VISTA! 🔥\n\n¿Te imaginas disfrutar de una cena para 2 personas en Malizzia Street Food?", likes: 100, comments: 287, reach: 875, impressions: 2294, permalink: "https://www.instagram.com/p/DWhAre0GhZ3/", media_url: "" },
+    { post_id: "17940154236174801", platform: "instagram", date: "2026-03-24T19:30:00+0000", message: "¿Has probado ya tu favorita?😈\n\n#malizziastreetfood #burgerlovers #lugo", likes: 28, comments: 0, reach: 507, impressions: 807, permalink: "https://www.instagram.com/reel/DWR2sX3RP2S/", media_url: "" },
+    { post_id: "18569832394024429", platform: "instagram", date: "2026-03-21T19:00:00+0000", message: "Hoy es sábado de pecar😈\n\nAtrévete con La Quicos. Brioche de patata, 2 smash burger...", likes: 23, comments: 0, reach: 702, impressions: 1295, permalink: "https://www.instagram.com/p/DWKE8XyjOCd/", media_url: "" },
+    { post_id: "17866563456504517", platform: "instagram", date: "2026-03-17T12:59:21+0000", message: "🍔 No hace falta dar más detalles\n\n🛵 ¡Haz ya tu pedido!", likes: 19, comments: 0, reach: 347, impressions: 739, permalink: "https://www.instagram.com/p/DV_IYNXjT84/", media_url: "" },
+    { post_id: "17959087779062223", platform: "instagram", date: "2026-03-06T15:43:08+0000", message: "🍔 Este fin de semana tienes una cita con Malizzia\n\n🛵 Haz tu pedido", likes: 38, comments: 0, reach: 931, impressions: 1364, permalink: "https://www.instagram.com/reel/DVjGVedlTZC/", media_url: "" },
+    { post_id: "18362327098091489", platform: "instagram", date: "2025-10-21T18:56:37+0000", message: "LA REINA DE LA CARTA 👑LA QUICOS👑 Entre las 5 mejores burgers de LUGO!", likes: 88, comments: 2, reach: 2424, impressions: 4000, permalink: "https://www.instagram.com/reel/DQFP8R2jJNX/", media_url: "" },
+    { post_id: "18073318099957309", platform: "instagram", date: "2025-10-14T15:00:00+0000", message: "FIESTA ANIVERSARIO MALIZZIA STREET FOOD está de aniversario y lo queremos celebrar contigo a lo grande 🎉", likes: 211, comments: 10, reach: 1800, impressions: 3200, permalink: "https://www.instagram.com/reel/DPyz0o7DAli/", media_url: "" },
+    { post_id: "18079223416628060", platform: "instagram", date: "2025-02-03T14:03:05+0000", message: "LA QUICOS 🍔😈 La más vendida! Pan Brioche, con 2 smash burger de ternera...", likes: 48, comments: 1, reach: 620, impressions: 980, permalink: "https://www.instagram.com/p/DFnQI-mNIaN/", media_url: "" },
+    { post_id: "1038218086032597_122115079803239901", platform: "facebook", date: "2026-03-17T12:59:18+0000", message: "🍔 No hace falta dar más detalles\n\n🛵 ¡Haz ya tu pedido!", likes: 0, comments: 0, reach: 3, impressions: 0, permalink: "https://www.facebook.com/122118035685239901/posts/122115079803239901", media_url: "" },
+    { post_id: "1038218086032597_122112601251239901", platform: "facebook", date: "2026-03-06T15:43:04+0000", message: "🍔 Este fin de semana tienes una cita con Malizzia\n\n🛵 Haz tu pedido", likes: 0, comments: 0, reach: 18, impressions: 0, permalink: "https://www.facebook.com/reel/1541474600281375/", media_url: "" },
+    { post_id: "1038218086032597_1207330298195224", platform: "facebook", date: "2026-02-04T11:36:57+0000", message: "Contenido especial de Facebook", likes: 0, comments: 0, reach: 7, impressions: 0, permalink: "https://www.facebook.com/122118035685239901/posts/1207330298195224", media_url: "" },
+    { post_id: "1038218086032597_122102495547239901", platform: "facebook", date: "2026-02-04T11:27:43+0000", message: "Contenido especial de Facebook", likes: 0, comments: 0, reach: 7, impressions: 0, permalink: "https://www.facebook.com/122118035685239901/posts/122102495547239901", media_url: "" },
+  ];
 
-  async function hashString(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  let currentFilter = 'all';
+  let allData = SAMPLE_DATA;
+
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderDashboard();
   }
 
-  function checkLogin() {
-    const val = document.getElementById('pwd-input').value;
-    if (!val) return;
-    hashString(val).then(hash => {
-      if (hash === PASSWORD_HASH) {
-        localStorage.setItem('sg_auth', '1');
-        showDashboard();
-      } else {
-        document.getElementById('login-error').style.display = 'block';
-      }
-    });
+  function filteredData() {
+    if (currentFilter === 'all') return allData;
+    return allData.filter(p => p.platform === currentFilter);
   }
 
-  function showDashboard() {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    loadData();
+  function formatNumber(n) {
+    if (!n) return '0';
+    if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+    return String(n);
   }
 
-  if (localStorage.getItem('sg_auth') === '1') {
-    showDashboard();
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
-  document.getElementById('pwd-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkLogin();
-  });
+  function renderDashboard() {
+    const data = filteredData();
+    const container = document.getElementById('main-content');
 
-  const PLATFORM_ICONS = {
-    'Instagram':   '<img src="https://cdn.simpleicons.org/instagram/E1306C" style="width:20px;height:20px" alt="Instagram">',
-    'X / Twitter': '<img src="https://cdn.simpleicons.org/x/222222" style="width:20px;height:20px" alt="X">',
-    'TikTok':      '<img src="https://cdn.simpleicons.org/tiktok/333333" style="width:20px;height:20px" alt="TikTok">',
-    'Facebook':    '<img src="https://cdn.simpleicons.org/facebook/1877F2" style="width:20px;height:20px" alt="Facebook">',
-    'LinkedIn':    '<svg viewBox="0 0 24 24" fill="#0A66C2" width="20" height="20"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
-    'Meta':        '<img src="https://cdn.simpleicons.org/meta/0082FB" style="width:20px;height:20px" alt="Meta">',
-    'Reddit':      '<img src="https://cdn.simpleicons.org/reddit/FF4500" style="width:20px;height:20px" alt="Reddit">',
-    'Pinterest':   '<img src="https://cdn.simpleicons.org/pinterest/E60023" style="width:20px;height:20px" alt="Pinterest">',
-    'Snapchat':    '<img src="https://cdn.simpleicons.org/snapchat/FFBE00" style="width:20px;height:20px" alt="Snapchat">',
-    'YouTube':     '<img src="https://cdn.simpleicons.org/youtube/FF0000" style="width:20px;height:20px" alt="YouTube">',
-  };
-
-  async function actualizarDatos() {
-    const btn = document.getElementById('refresh-btn');
-    const icon = document.getElementById('refresh-icon');
-    btn.disabled = true;
-    icon.textContent = '⏳';
-    icon.classList.add('spin');
-    try {
-      await fetch(WEBHOOK_URL, { mode: 'no-cors' });
-      await new Promise(r => setTimeout(r, 5000));
-      await loadData();
-      icon.textContent = '✅';
-      setTimeout(() => { icon.textContent = '🔄'; icon.classList.remove('spin'); btn.disabled = false; }, 2000);
-    } catch(e) {
-      icon.textContent = '❌';
-      setTimeout(() => { icon.textContent = '🔄'; icon.classList.remove('spin'); btn.disabled = false; }, 2000);
-    }
-  }
-
-  async function loadData() {
-    try {
-      const res = await fetch('data.json?t=' + Date.now());
-      const d = await res.json();
-
-      document.getElementById('stat-users').textContent = d.totalUsers || 0;
-      document.getElementById('stat-pageviews').textContent = d.eventos?.page_view || 0;
-      document.getElementById('stat-clicks').textContent = d.eventos?.plataforma_vista || 0;
-      document.getElementById('stat-subs').textContent = d.eventos?.clic_suscribete || 0;
-
-      buildHourChart(d.horas || {});
-      buildCityList(d.ciudades || {});
-      buildCityChart(d.ciudades || {});
-      buildPlatforms(d.plataformas || {});
-      buildDiasChart(d.dias || {});
-      buildFuentes(d.fuentes || {});
-
-      if (d.updatedAt) {
-        const date = new Date(d.updatedAt);
-        document.getElementById('updated-at').textContent = 'Actualizado: ' + date.toLocaleString('es-ES');
-      }
-    } catch(e) {
-      console.error('Error cargando datos:', e);
-    }
-  }
-
-  function buildHourChart(horas) {
-    const labels = Array.from({length: 24}, (_, i) => i + 'h');
-    const data = Array.from({length: 24}, (_, i) => horas[String(i)] || 0);
-    new Chart(document.getElementById('hourChart'), {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{ data, backgroundColor: '#111', borderRadius: 3, borderSkipped: false }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#aaa', maxTicksLimit: 12 } },
-          y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#aaa' } }
-        }
-      }
-    });
-  }
-
-  function buildCityList(ciudades) {
-    const sorted = Object.entries(ciudades).sort((a,b) => b[1]-a[1]).slice(0, 8);
-    const total = sorted.reduce((s, [,v]) => s + v, 0);
-    const container = document.getElementById('city-list');
-    container.innerHTML = sorted.map(([city, count]) => {
-      const pct = total > 0 ? Math.round(count / total * 100) : 0;
-      return `<div class="city-row">
-        <div class="city-name">${city}</div>
-        <div class="city-bar-wrap"><div class="city-bar" style="width:${pct}%"></div></div>
-        <div class="city-pct">${pct}%</div>
-      </div>`;
-    }).join('');
-  }
-
-  function buildCityChart(ciudades) {
-    const sorted = Object.entries(ciudades).sort((a,b) => b[1]-a[1]).slice(0, 6);
-    new Chart(document.getElementById('cityChart'), {
-      type: 'doughnut',
-      data: {
-        labels: sorted.map(([c]) => c),
-        datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: ['#111','#333','#555','#777','#999','#bbb'], borderWidth: 0 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#888', boxWidth: 10 } } }
-      }
-    });
-  }
-
-  function buildDiasChart(dias) {
-    const sorted = Object.entries(dias).sort((a, b) => a[0].localeCompare(b[0]));
-    const labels = sorted.map(([fecha]) => {
-      const y = fecha.slice(0,4), m = fecha.slice(4,6), d = fecha.slice(6,8);
-      return new Date(y, m-1, d).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
-    });
-    const data = sorted.map(([, v]) => v);
-    new Chart(document.getElementById('diasChart'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{ data, borderColor: '#111', backgroundColor: 'rgba(0,0,0,0.05)', borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#111', tension: 0.3, fill: true }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#aaa' } },
-          y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#aaa' } }
-        }
-      }
-    });
-  }
-
-  function buildFuentes(fuentes) {
-    const container = document.getElementById('fuentes-list');
-    const sorted = Object.entries(fuentes).sort((a, b) => b[1] - a[1]);
-    const total = sorted.reduce((s, [, v]) => s + v, 0);
-    container.innerHTML = sorted.map(([fuente, count]) => {
-      const pct = total > 0 ? Math.round(count / total * 100) : 0;
-      return `<div class="city-row">
-        <div class="city-name">${fuente}</div>
-        <div class="city-bar-wrap"><div class="city-bar" style="width:${pct}%"></div></div>
-        <div class="city-pct">${pct}%</div>
-      </div>`;
-    }).join('');
-  }
-
-  function buildPlatforms(plataformas) {
-    const grid = document.getElementById('platform-grid');
-    if (!plataformas || Object.keys(plataformas).length === 0) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#aaa;font-size:13px;padding:2rem 0">Sin datos aún</div>';
+    if (!data.length) {
+      container.innerHTML = '<div class="loading">Sin datos para esta plataforma</div>';
       return;
     }
-    const sorted = Object.entries(plataformas).sort((a, b) => b[1] - a[1]);
-    grid.innerHTML = sorted.map(([name, count]) => `
-      <div class="platform-card">
-        <div class="platform-icon">${PLATFORM_ICONS[name] || '📊'}</div>
-        <div class="platform-name">${name}</div>
-        <div class="platform-clics">${count}</div>
-        <div class="platform-label">clics</div>
+
+    const totalReach = data.reduce((s, p) => s + (parseInt(p.reach) || 0), 0);
+    const totalImpressions = data.reduce((s, p) => s + (parseInt(p.impressions) || 0), 0);
+    const totalLikes = data.reduce((s, p) => s + (parseInt(p.likes) || 0), 0);
+    const totalComments = data.reduce((s, p) => s + (parseInt(p.comments) || 0), 0);
+    const totalPosts = data.length;
+    const avgEngagement = totalPosts > 0 ? Math.round((totalLikes + totalComments) / totalPosts) : 0;
+
+    const igData = allData.filter(p => p.platform === 'instagram');
+    const fbData = allData.filter(p => p.platform === 'facebook');
+
+    const topPost = [...data].sort((a, b) => (parseInt(b.reach) || 0) - (parseInt(a.reach) || 0))[0];
+    const maxReach = Math.max(...data.map(p => parseInt(p.reach) || 0));
+
+    // Sort by date desc for display
+    const sortedPosts = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    container.innerHTML = `
+      <div class="section-label">resumen general</div>
+      <div class="kpi-grid">
+        <div class="kpi-card dark">
+          <div class="kpi-label">Alcance total</div>
+          <div class="kpi-value">${formatNumber(totalReach)}</div>
+          <div class="kpi-sub">${totalPosts} publicaciones</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Impresiones</div>
+          <div class="kpi-value">${formatNumber(totalImpressions)}</div>
+          <div class="kpi-sub">visualizaciones totales</div>
+        </div>
+        <div class="kpi-card accent">
+          <div class="kpi-label">Me gusta</div>
+          <div class="kpi-value">${formatNumber(totalLikes)}</div>
+          <div class="kpi-sub">en ${totalPosts} posts</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Eng. medio / post</div>
+          <div class="kpi-value">${formatNumber(avgEngagement)}</div>
+          <div class="kpi-sub">likes + comentarios</div>
+        </div>
       </div>
-    `).join('');
+
+      ${currentFilter === 'all' ? `
+      <div class="section-label">por plataforma</div>
+      <div class="platform-split">
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-dot ig"></div>
+            <div class="platform-name-label">Instagram</div>
+          </div>
+          <div class="platform-stats">
+            <div class="platform-stat">
+              <div class="platform-stat-value">${formatNumber(igData.reduce((s,p) => s+(parseInt(p.reach)||0), 0))}</div>
+              <div class="platform-stat-label">Alcance</div>
+            </div>
+            <div class="platform-stat">
+              <div class="platform-stat-value">${formatNumber(igData.reduce((s,p) => s+(parseInt(p.impressions)||0), 0))}</div>
+              <div class="platform-stat-label">Views</div>
+            </div>
+            <div class="platform-stat">
+              <div class="platform-stat-value">${formatNumber(igData.reduce((s,p) => s+(parseInt(p.likes)||0), 0))}</div>
+              <div class="platform-stat-label">Likes</div>
+            </div>
+            <div class="platform-stat">
+              <div class="platform-stat-value">${igData.length}</div>
+              <div class="platform-stat-label">Posts</div>
+            </div>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-dot fb"></div>
+            <div class="platform-name-label">Facebook</div>
+          </div>
+          <div class="platform-stats">
+            <div class="platform-stat">
+              <div class="platform-stat-value">${formatNumber(fbData.reduce((s,p) => s+(parseInt(p.reach)||0), 0))}</div>
+              <div class="platform-stat-label">Alcance</div>
+            </div>
+            <div class="platform-stat">
+              <div class="platform-stat-value">${formatNumber(fbData.reduce((s,p) => s+(parseInt(p.impressions)||0), 0))}</div>
+              <div class="platform-stat-label">Impresiones</div>
+            </div>
+            <div class="platform-stat">
+              <div class="platform-stat-value">${formatNumber(fbData.reduce((s,p) => s+(parseInt(p.likes)||0), 0))}</div>
+              <div class="platform-stat-label">Likes</div>
+            </div>
+            <div class="platform-stat">
+              <div class="platform-stat-value">${fbData.length}</div>
+              <div class="platform-stat-label">Posts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      ` : ''}
+
+      <div class="section-label">mejor publicación</div>
+      <div class="top-post-card">
+        <div class="top-post-img">
+          ${topPost.media_url ? `<img src="${topPost.media_url}" alt="post" />` : '🍔'}
+        </div>
+        <div style="flex:1">
+          <div class="top-post-badge">⭐ Top alcance</div>
+          <div class="top-post-message">${topPost.message || '(Sin texto)'}</div>
+          <div class="top-post-stats">
+            <div>
+              <div class="top-post-stat-value">${formatNumber(topPost.reach)}</div>
+              <div class="top-post-stat-label">Alcance</div>
+            </div>
+            <div>
+              <div class="top-post-stat-value">${formatNumber(topPost.impressions)}</div>
+              <div class="top-post-stat-label">Views</div>
+            </div>
+            <div>
+              <div class="top-post-stat-value">${formatNumber(topPost.likes)}</div>
+              <div class="top-post-stat-label">Likes</div>
+            </div>
+            <div>
+              <div class="top-post-stat-value">${formatNumber(topPost.comments)}</div>
+              <div class="top-post-stat-label">Comentarios</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">todas las publicaciones</div>
+      <div class="posts-grid">
+        ${sortedPosts.map(post => `
+          <a href="${post.permalink}" target="_blank" style="text-decoration:none;color:inherit;">
+            <div class="post-card">
+              <div class="post-img">
+                ${post.media_url ? `<img src="${post.media_url}" alt="post" />` : '🍔'}
+                <div class="post-platform-badge ${post.platform === 'instagram' ? 'ig' : 'fb'}">
+                  ${post.platform === 'instagram' ? '📷' : '👤'}
+                </div>
+              </div>
+              <div class="post-body">
+                <div class="post-date">${formatDate(post.date)}</div>
+                <div class="post-message">${post.message || '(Sin texto)'}</div>
+                <div class="post-stats">
+                  <div class="post-stat">❤️ <strong>${formatNumber(post.likes)}</strong></div>
+                  <div class="post-stat">💬 <strong>${formatNumber(post.comments)}</strong></div>
+                  <div class="post-stat">👁 <strong>${formatNumber(post.reach)}</strong></div>
+                </div>
+                <div class="post-reach-bar">
+                  <div class="post-reach-fill" style="width:${maxReach > 0 ? Math.round((parseInt(post.reach)||0) / maxReach * 100) : 0}%"></div>
+                </div>
+              </div>
+            </div>
+          </a>
+        `).join('')}
+      </div>
+    `;
   }
+
+  // Init
+  renderDashboard();
 </script>
 </body>
 </html>
