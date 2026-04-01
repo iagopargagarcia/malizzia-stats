@@ -209,26 +209,31 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-  // ============================
-  // DATOS DE EJEMPLO (reemplazar por fetch al Sheet o webhook)
-  // ============================
-  const SAMPLE_DATA = [
-    { post_id: "18101985377509020", platform: "instagram", date: "2026-03-30T16:46:15+0000", message: "🔥 ¡SORTEO A LA VISTA! 🔥\n\n¿Te imaginas disfrutar de una cena para 2 personas en Malizzia Street Food?", likes: 100, comments: 287, reach: 875, impressions: 2294, permalink: "https://www.instagram.com/p/DWhAre0GhZ3/", media_url: "" },
-    { post_id: "17940154236174801", platform: "instagram", date: "2026-03-24T19:30:00+0000", message: "¿Has probado ya tu favorita?😈\n\n#malizziastreetfood #burgerlovers #lugo", likes: 28, comments: 0, reach: 507, impressions: 807, permalink: "https://www.instagram.com/reel/DWR2sX3RP2S/", media_url: "" },
-    { post_id: "18569832394024429", platform: "instagram", date: "2026-03-21T19:00:00+0000", message: "Hoy es sábado de pecar😈\n\nAtrévete con La Quicos. Brioche de patata, 2 smash burger...", likes: 23, comments: 0, reach: 702, impressions: 1295, permalink: "https://www.instagram.com/p/DWKE8XyjOCd/", media_url: "" },
-    { post_id: "17866563456504517", platform: "instagram", date: "2026-03-17T12:59:21+0000", message: "🍔 No hace falta dar más detalles\n\n🛵 ¡Haz ya tu pedido!", likes: 19, comments: 0, reach: 347, impressions: 739, permalink: "https://www.instagram.com/p/DV_IYNXjT84/", media_url: "" },
-    { post_id: "17959087779062223", platform: "instagram", date: "2026-03-06T15:43:08+0000", message: "🍔 Este fin de semana tienes una cita con Malizzia\n\n🛵 Haz tu pedido", likes: 38, comments: 0, reach: 931, impressions: 1364, permalink: "https://www.instagram.com/reel/DVjGVedlTZC/", media_url: "" },
-    { post_id: "18362327098091489", platform: "instagram", date: "2025-10-21T18:56:37+0000", message: "LA REINA DE LA CARTA 👑LA QUICOS👑 Entre las 5 mejores burgers de LUGO!", likes: 88, comments: 2, reach: 2424, impressions: 4000, permalink: "https://www.instagram.com/reel/DQFP8R2jJNX/", media_url: "" },
-    { post_id: "18073318099957309", platform: "instagram", date: "2025-10-14T15:00:00+0000", message: "FIESTA ANIVERSARIO MALIZZIA STREET FOOD está de aniversario y lo queremos celebrar contigo a lo grande 🎉", likes: 211, comments: 10, reach: 1800, impressions: 3200, permalink: "https://www.instagram.com/reel/DPyz0o7DAli/", media_url: "" },
-    { post_id: "18079223416628060", platform: "instagram", date: "2025-02-03T14:03:05+0000", message: "LA QUICOS 🍔😈 La más vendida! Pan Brioche, con 2 smash burger de ternera...", likes: 48, comments: 1, reach: 620, impressions: 980, permalink: "https://www.instagram.com/p/DFnQI-mNIaN/", media_url: "" },
-    { post_id: "1038218086032597_122115079803239901", platform: "facebook", date: "2026-03-17T12:59:18+0000", message: "🍔 No hace falta dar más detalles\n\n🛵 ¡Haz ya tu pedido!", likes: 0, comments: 0, reach: 3, impressions: 0, permalink: "https://www.facebook.com/122118035685239901/posts/122115079803239901", media_url: "" },
-    { post_id: "1038218086032597_122112601251239901", platform: "facebook", date: "2026-03-06T15:43:04+0000", message: "🍔 Este fin de semana tienes una cita con Malizzia\n\n🛵 Haz tu pedido", likes: 0, comments: 0, reach: 18, impressions: 0, permalink: "https://www.facebook.com/reel/1541474600281375/", media_url: "" },
-    { post_id: "1038218086032597_1207330298195224", platform: "facebook", date: "2026-02-04T11:36:57+0000", message: "Contenido especial de Facebook", likes: 0, comments: 0, reach: 7, impressions: 0, permalink: "https://www.facebook.com/122118035685239901/posts/1207330298195224", media_url: "" },
-    { post_id: "1038218086032597_122102495547239901", platform: "facebook", date: "2026-02-04T11:27:43+0000", message: "Contenido especial de Facebook", likes: 0, comments: 0, reach: 7, impressions: 0, permalink: "https://www.facebook.com/122118035685239901/posts/122102495547239901", media_url: "" },
-  ];
+  const WEBHOOK_URL = 'https://anotherparga.app.n8n.cloud/webhook/malizzia-stats-prueba';
 
   let currentFilter = 'all';
-  let allData = SAMPLE_DATA;
+  let allData = [];
+
+  async function loadData() {
+    document.getElementById('main-content').innerHTML = '<div class="loading"><span class="spinner"></span> Cargando datos...</div>';
+    try {
+      const res = await fetch(WEBHOOK_URL);
+      const raw = await res.json();
+      // Filtrar filas vacías y normalizar
+      allData = (Array.isArray(raw) ? raw : [raw])
+        .filter(p => p.post_id && p.platform)
+        .map(p => ({
+          ...p,
+          likes: parseInt(p.likes) || 0,
+          comments: parseInt(p.comments) || 0,
+          reach: parseInt(p.reach) || 0,
+          impressions: parseInt(p.impressions) || 0,
+        }));
+      renderDashboard();
+    } catch(e) {
+      document.getElementById('main-content').innerHTML = '<div class="loading">Error cargando datos. Comprueba el webhook.</div>';
+    }
+  }
 
   function setFilter(filter, btn) {
     currentFilter = filter;
@@ -417,7 +422,7 @@
   }
 
   // Init
-  renderDashboard();
+  loadData();
 </script>
 </body>
 </html>
